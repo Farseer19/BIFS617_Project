@@ -21,6 +21,7 @@ def input_FASTA ():
                     return_FASTA[curr_FASTA] += line.upper()
     return return_FASTA
 
-
+def function():
+    print("Output")
 
 print(input_FASTA())
