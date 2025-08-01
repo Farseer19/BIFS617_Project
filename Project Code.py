@@ -7,7 +7,7 @@ f"Parse input FASTA files that may have errors  "
 def input_FASTA ():
     f"Dictionary that stores header information and corresponding full sequences in all caps"
     return_FASTA = dict()
-    with open(r"C:\Users\halld\Documents\input.txt") as f:
+    with open(r"input.txt") as f:
         f"Sets current FASTA entry where sequence data is being added to"
         curr_FASTA = str()
 
@@ -21,10 +21,9 @@ def input_FASTA ():
                     return_FASTA[curr_FASTA] += line.upper()
     return return_FASTA
 
-def function():
-    print("Output")
 
-print(input_FASTA())
+
+
 
 # function for reverse complement
 def reverse_complement(seq):
@@ -35,10 +34,12 @@ def reverse_complement(seq):
 
 
 # Finds ORFs in a given frame 
-def find_orfs_in_frame(seq, min_len=50, reverse = False):
+def find_orfs_in_frame(seq, min_len, reverse):
     # List to store found ORFs
     orfs = []
 
+    if reverse:
+        seq = reverse_complement(seq)
     # Loop through all three frame offsets (0, 1, or 2)
     for offset in range(3):
         # Start reading at the given frame offset 
@@ -77,7 +78,7 @@ def find_orfs_in_frame(seq, min_len=50, reverse = False):
                             frame = offset + 4 if reverse else offset + 1
                             
                             # Position number depending on which strand
-                            pos = -(len(seq) - start) if reverse else start + 1
+                            pos = -(start+1) if reverse else start + 1
                             
                             # Add in orf if long enough  
                             orfs.append((frame, pos, orf_seq))  
@@ -95,3 +96,23 @@ def find_orfs_in_frame(seq, min_len=50, reverse = False):
 
     # Return list of ORFs found in this frame
     return orfs
+
+
+def orfs_from_input(min_len):
+    input_dict = input_FASTA()
+    output_dict = {}
+    f"Look through each entry from the input_FASTA function and process to find ORFs"
+    for entry in input_dict:
+        output_dict[entry] = find_orfs_in_frame(input_dict[entry],min_len,True)
+        output_dict[entry] += find_orfs_in_frame(input_dict[entry],min_len,False)
+    
+    print(output_dict)
+    f"Print out in viewable format"
+    for entry in output_dict:
+        for orf in output_dict[entry]:
+            print(entry, "|FRAME=",orf[0],"POS=",orf[1],"LEN=",len(orf[2]))
+            output_seq = " ".join([orf[2][i:i+3] for i in range(0, len(orf[2]), 3)])
+            print(output_seq)
+
+f"Printing with no minimum"
+orfs_from_input(0)
