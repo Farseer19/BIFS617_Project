@@ -24,7 +24,7 @@ def input_FASTA ():
 
 
 
-
+# Author: Matt Kubit
 # function for reverse complement
 def reverse_complement(seq):
     # replace nucleotides with appropriate complement
@@ -32,7 +32,7 @@ def reverse_complement(seq):
     # reverse the sequence
     return seq.translate(complement)[::-1]
 
-
+# Author: Matt Kubit
 # Finds ORFs in a given frame 
 def find_orfs_in_frame(seq, min_len, reverse):
     # List to store found ORFs
